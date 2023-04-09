@@ -17,31 +17,57 @@ let options = {
   },
 };
 
-let getWeatherData = (city) => {
-  let url = `https://api.api-ninjas.com/v1/weather?city=${city}`;
-  fetch(url, options)
-    .then((response) => {
-      if (response.status != 200)
-        window.alert(
-          "Invalid input😒 For accurate weather report, please enter the name of the place without any space or special characters😊"
-        );
-      return response.json();
-    })
-    .then((data) => {
-      responseData = data;
-      // console.log(data);
-      setTextContents(responseData, city);
-      document.querySelector(".weather.loading").style.visibility = "visible";
-    })
-    .catch((err) => console.log(`${err}`));
-};
+async function getWeatherData(city) {
+  try {
+    let url = `https://api.api-ninjas.com/v1/weather?city=${city}`;
+    let response = await fetch(url, options);
+    if (response.status != 200) {
+      window.alert(
+        "Invalid input😒 For accurate weather report, please enter the name of the place without any space or special characters😊"
+      );
+      return "invalid";
+    } else {
+      let data = await response.json();
+      if (data !== "invalid") {
+        responseData = data;
+        setTextContents(responseData, city);
+        document.querySelector(".weather.loading").style.visibility = "visible";
+      }
+    }
+  } catch (err) {
+    console.log(`${err}`);
+  }
+}
+
+// let getWeatherData = (city) => {
+//   let url = `https://api.api-ninjas.com/v1/weather?city=${city}`;
+//   fetch(url, options)
+//     .then((response) => {
+//       if (response.status != 200) {
+//         window.alert(
+//           "Invalid input😒 For accurate weather report, please enter the name of the place without any space or special characters😊"
+//         );
+//         return 'invalid';
+//       } else return response.json();
+//     })
+//     .then((data) => {
+//       if (data !== 'invalid') {
+//         responseData = data;
+//         // console.log(data);
+//         setTextContents(responseData, city);
+//         document.querySelector(".weather.loading").style.visibility = "visible";
+//       }
+//     })
+//     .catch((err) => console.log(`${err}`));
+// };
 let setTextContents = (responseData, cityName) => {
   if (responseData.cloud_pct < 50) {
     description.textContent = "Clear Sky";
   } else if (responseData.cloud_pct > 80) description.textContent = "Rainy";
   else if (responseData.cloud_pct > 70) description.textContent = "Too cloudy";
-  else if (responseData.cloud_pct > 50)
+  else if (responseData.cloud_pct > 50) {
     description.textContent = "Partly Cloudy";
+  }
   city.textContent = `Weather in ${cityName}`;
   temperature.textContent = responseData.temp + " °C";
   humidity.textContent = `Humidity: ${responseData.humidity} %`;
@@ -49,10 +75,10 @@ let setTextContents = (responseData, cityName) => {
 };
 submitButton.addEventListener("click", () => {
   queryValue = document.querySelector("#whatcitybro").value;
-
+  // document.querySelector("#whatcitybro").textContent = "";
   if (queryValue.length > 0) {
     getWeatherData(queryValue);
-  } else; //console.log("invalid")
+  } else;
 });
 
 ForC.addEventListener("click", () => {

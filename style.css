@@ -77,6 +77,10 @@ h1.temp {
   position: relative;
 }
 
+.Forc:hover{
+  color: blue;
+}
+
 /* .weather.loading:after {
   visibility: visible;
   content: "Loading...";
